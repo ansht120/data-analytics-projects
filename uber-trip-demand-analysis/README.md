@@ -32,3 +32,28 @@ This project uses SQL to analyze Uber trip data and generate business insights r
 - Applied ROW_NUMBER() window function for final deduplication
 - Validated imported records
 - Structured cleaned data for analysis
+
+## Analysis Performed
+
+- Trip demand analysis
+- Revenue analysis
+- Peak hour analysis
+- Vehicle performance analysis
+- Airport trip analysis
+- Weekend vs weekday comparison
+- Pickup location analysis
+
+## Key Insights
+
+- Peak ride demand occurred during high-traffic hours.
+- Premium vehicle categories generated higher revenue.
+- Airport-related trips contributed significantly to total bookings.
+- Certain pickup locations consistently showed high customer demand.
+- Weekend ride behavior showed variations in average fare patterns.
+
+## Business Recommendations
+
+- Increase driver availability during peak demand hours.
+- Optimize airport ride operations for improved efficiency.
+- Focus premium vehicle allocation in high-revenue locations.
+- Apply demand-based pricing strategies during weekends and busy periods.
