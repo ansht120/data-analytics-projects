@@ -57,3 +57,15 @@ This project uses SQL to analyze Uber trip data and generate business insights r
 - Optimize airport ride operations for improved efficiency.
 - Focus premium vehicle allocation in high-revenue locations.
 - Apply demand-based pricing strategies during weekends and busy periods.
+
+## Excel Analysis
+
+Excel Pivot Tables were used to analyze:
+
+- Peak demand hours
+- Revenue trends
+- Vehicle performance
+- Pickup location activity
+- Weekend vs weekday trip patterns
+
+The Excel analysis helped summarize operational and revenue insights from the trip dataset.
