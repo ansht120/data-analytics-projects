@@ -24,3 +24,11 @@ This project uses SQL to analyze Uber trip data and generate business insights r
 - Window Functions
 - Aggregation Functions
 - Business Intelligence
+
+## Data Cleaning & Preparation
+
+- Imported CSV data into MySQL
+- Removed duplicate trip records
+- Applied ROW_NUMBER() window function for final deduplication
+- Validated imported records
+- Structured cleaned data for analysis
