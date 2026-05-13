@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<!-- saved from url=(0124)file:///C:/Users/ansht/Downloads/Data%20Analyst%20Project/Supply%20Chain%20Inventory%20Optimization%20Project/dashboard.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Dashboard</title>
+    <script src="./Supply Chain Dashboard_files/chart.umd.min.js.download"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #F0F2F5;
+            color: #252423;
+            min-height: 100vh;
+        }
+
+        /* ─── Top Header Bar (Power BI style) ─── */
+        .header-bar {
+            background: linear-gradient(135deg, #1B1F3B 0%, #2D3250 50%, #1B1F3B 100%);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #F2C94C, #F4A261);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(242, 201, 76, 0.3);
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.55);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-badge .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #27AE60;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ─── Filter Bar ─── */
+        .filter-bar {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E5E5;
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #605E5C;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .filter-chip {
+            background: #F3F2F1;
+            border: 1px solid #E1DFDD;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #323130;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: #E8F0FE;
+            border-color: #4285F4;
+            color: #1A73E8;
+        }
+
+        .filter-chip.active {
+            font-weight: 600;
+        }
+
+        /* ─── Main Layout ─── */
+        .dashboard {
+            padding: 24px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ─── KPI Cards Row ─── */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, #4285F4, #6BA3FF); }
+        .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, #27AE60, #6FCF97); }
+        .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, #F2994A, #F2C94C); }
+        .kpi-card:nth-child(4)::before { background: linear-gradient(90deg, #9B51E0, #BB6BD9); }
+
+        .kpi-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #605E5C;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1B1F3B;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .kpi-sub {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .kpi-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .kpi-trend.up {
+            background: #E6F7EE;
+            color: #27AE60;
+        }
+
+        .kpi-trend.down {
+            background: #FDE8E8;
+            color: #EB5757;
+        }
+
+        .kpi-desc {
+            color: #8A8886;
+            font-size: 12px;
+        }
+
+        .kpi-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            opacity: 0.15;
+        }
+
+        .kpi-card:nth-child(1) .kpi-icon { background: #4285F4; }
+        .kpi-card:nth-child(2) .kpi-icon { background: #27AE60; }
+        .kpi-card:nth-child(3) .kpi-icon { background: #F2994A; }
+        .kpi-card:nth-child(4) .kpi-icon { background: #9B51E0; }
+
+        /* ─── Chart Grid ─── */
+        .chart-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .grid-2col {
+            grid-template-columns: 1.5fr 1fr;
+        }
+
+        .grid-3col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .grid-2equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .chart-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1B1F3B;
+        }
+
+        .chart-subtitle {
+            font-size: 11px;
+            color: #8A8886;
+            margin-top: 2px;
+        }
+
+        .chart-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-blue { background: #E8F0FE; color: #1A73E8; }
+        .badge-green { background: #E6F7EE; color: #27AE60; }
+        .badge-orange { background: #FFF3E0; color: #F2994A; }
+        .badge-purple { background: #F3E8FD; color: #9B51E0; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+        }
+
+        /* ─── Data Table ─── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            color: #605E5C;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #E5E5E5;
+            background: #FAFAF9;
+        }
+
+        .data-table tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #F3F2F1;
+            color: #323130;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F8F8F8;
+        }
+
+        .bar-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-fill {
+            height: 8px;
+            border-radius: 4px;
+            min-width: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-ontime { background: #E6F7EE; color: #27AE60; }
+        .status-late { background: #FDE8E8; color: #EB5757; }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center;
+            padding: 20px 32px;
+            font-size: 11px;
+            color: #8A8886;
+            border-top: 1px solid #E5E5E5;
+            background: #FFFFFF;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1200px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .grid-2col, .grid-3col { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-row { grid-template-columns: 1fr; }
+            .header-top { padding: 12px 16px; }
+            .dashboard { padding: 16px; }
+            .filter-bar { padding: 8px 16px; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header-bar">
+    <div class="header-top">
+        <div class="header-title-group">
+            <div class="header-icon">📦</div>
+            <div>
+                <div class="header-title">Supply Chain Inventory Optimization</div>
+                <div class="header-subtitle">Performance Analytics • Inventory &amp; Delivery Intelligence</div>
+            </div>
+        </div>
+        <div class="header-meta">
+            <div class="header-badge"><span class="dot"></span> Live Data</div>
+            <div class="header-badge">2018 – 2020</div>
+            <div class="header-badge">7,991 Orders</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ FILTER BAR ═══ -->
+<div class="filter-bar">
+    <span class="filter-label">Filters:</span>
+    <span class="filter-chip active" onclick="this.classList.toggle(&#39;active&#39;)">All Channels</span>
+    <span class="filter-chip active" onclick="this.classList.toggle(&#39;active&#39;)">Distributor</span>
+    <span class="filter-chip active" onclick="this.classList.toggle(&#39;active&#39;)">In-Store</span>
+    <span class="filter-chip active" onclick="this.classList.toggle(&#39;active&#39;)">Online</span>
+    <span class="filter-chip active" onclick="this.classList.toggle(&#39;active&#39;)">Wholesale</span>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="dashboard">
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-value">$82.69M</div>
+            <div class="kpi-sub">
+                <span class="kpi-trend up">▲ 13.3%</span>
+                <span class="kpi-desc">YoY Growth (2019→2020)</span>
+            </div>
+            <div class="kpi-icon">💰</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Profit</div>
+            <div class="kpi-value">$21.22M</div>
+            <div class="kpi-sub">
+                <span class="kpi-trend up">▲ 25.7%</span>
+                <span class="kpi-desc">Profit Margin</span>
+            </div>
+            <div class="kpi-icon">📈</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">On-Time Delivery</div>
+            <div class="kpi-value">70.1%</div>
+            <div class="kpi-sub">
+                <span class="kpi-trend down">▼ 29.9%</span>
+                <span class="kpi-desc">Late Deliveries</span>
+            </div>
+            <div class="kpi-icon">🚚</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Orders</div>
+            <div class="kpi-value">7,991</div>
+            <div class="kpi-sub">
+                <span class="kpi-trend up">▲ 6 Warehouses</span>
+                <span class="kpi-desc">Across all channels</span>
+            </div>
+            <div class="kpi-icon">📋</div>
+        </div>
+    </div>
+
+    <!-- Row 1: Revenue Trend + Revenue by Channel -->
+    <div class="chart-grid grid-2col">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Revenue Trend Over Time</div>
+                    <div class="chart-subtitle">Monthly revenue performance (2018 – 2020)</div>
+                </div>
+                <span class="chart-badge badge-blue">Trend</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="revenueTrendChart" height="350" style="display: block; box-sizing: border-box; height: 280px; width: 812px;" width="1015"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Revenue by Sales Channel</div>
+                    <div class="chart-subtitle">Channel contribution to total revenue</div>
+                </div>
+                <span class="chart-badge badge-green">Breakdown</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="revenueChannelChart" height="350" width="656" style="display: block; box-sizing: border-box; height: 280px; width: 525px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Profit by Channel + Delivery Analysis + Warehouse Performance -->
+    <div class="chart-grid grid-3col">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Profit by Sales Channel</div>
+                    <div class="chart-subtitle">Profit distribution across channels</div>
+                </div>
+                <span class="chart-badge badge-purple">Profit</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="profitChannelChart" height="325" width="528" style="display: block; box-sizing: border-box; height: 260px; width: 422px;"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Delivery Performance</div>
+                    <div class="chart-subtitle">On-time vs late deliveries</div>
+                </div>
+                <span class="chart-badge badge-orange">Delivery</span>
+            </div>
+            <div class="chart-container" style="display:flex;align-items:center;justify-content:center;">
+                <canvas id="deliveryChart" height="325" width="528" style="display: block; box-sizing: border-box; height: 260px; width: 422px;"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Avg Delivery Days</div>
+                    <div class="chart-subtitle">By warehouse location</div>
+                </div>
+                <span class="chart-badge badge-blue">Warehouse</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="warehouseChart" height="325" width="528" style="display: block; box-sizing: border-box; height: 260px; width: 422px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3: Yearly Comparison + Warehouse Table -->
+    <div class="chart-grid grid-2equal">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Yearly Revenue Comparison</div>
+                    <div class="chart-subtitle">Revenue growth across years</div>
+                </div>
+                <span class="chart-badge badge-green">Comparison</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="yearlyChart" height="312" width="836" style="display: block; box-sizing: border-box; height: 250px; width: 668px;"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Warehouse Performance Summary</div>
+                    <div class="chart-subtitle">Delivery days and performance index</div>
+                </div>
+                <span class="chart-badge badge-purple">Table</span>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Warehouse</th>
+                        <th>Avg Days</th>
+                        <th>Performance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WARE-NBV1002</strong></td>
+                        <td>3,716</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:27%;background:linear-gradient(90deg,#27AE60,#6FCF97)"></div><span>Best</span></div></td>
+                        <td><span class="status-pill status-ontime">● Good</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WARE-MKL1006</strong></td>
+                        <td>4,584</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:33%;background:linear-gradient(90deg,#27AE60,#6FCF97)"></div><span>Good</span></div></td>
+                        <td><span class="status-pill status-ontime">● Good</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WARE-XYS1001</strong></td>
+                        <td>6,825</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:49%;background:linear-gradient(90deg,#F2994A,#F2C94C)"></div><span>Avg</span></div></td>
+                        <td><span class="status-pill status-late">● Needs Review</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WARE-UHY1004</strong></td>
+                        <td>6,953</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:50%;background:linear-gradient(90deg,#F2994A,#F2C94C)"></div><span>Avg</span></div></td>
+                        <td><span class="status-pill status-late">● Needs Review</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WARE-PUJ1005</strong></td>
+                        <td>8,103</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:59%;background:linear-gradient(90deg,#EB5757,#F2994A)"></div><span>Slow</span></div></td>
+                        <td><span class="status-pill status-late">● Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WARE-NMK1003</strong></td>
+                        <td>13,801</td>
+                        <td><div class="bar-cell"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#EB5757,#C0392B)"></div><span>Worst</span></div></td>
+                        <td><span class="status-pill status-late">● Critical</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Row 4: Channel Revenue vs Profit Comparison -->
+    <div class="chart-grid" style="grid-template-columns:1fr;">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Revenue vs Profit by Sales Channel</div>
+                    <div class="chart-subtitle">Comparative analysis of revenue and profit margins across all channels</div>
+                </div>
+                <span class="chart-badge badge-blue">Comparison</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="revVsProfitChart" height="150" width="1759" style="display: block; box-sizing: border-box; height: 120px; width: 1407px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+    Supply Chain Inventory Optimization Dashboard • Data Period: May 2018 – Dec 2020 • Total Records: 7,991 • Report Generated: May 2026
+</div>
+
+<!-- ═══ CHARTS ═══ -->
+<script>
+    const COLORS = {
+        blue:    '#4285F4',
+        green:   '#27AE60',
+        orange:  '#F2994A',
+        purple:  '#9B51E0',
+        red:     '#EB5757',
+        teal:    '#00B8D4',
+        yellow:  '#F2C94C',
+        pink:    '#E91E63',
+    };
+
+    const gradientBlue = (ctx, h) => {
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, 'rgba(66,133,244,0.25)');
+        g.addColorStop(1, 'rgba(66,133,244,0.02)');
+        return g;
+    };
+
+    Chart.defaults.font.family = "'Segoe UI','Inter',system-ui,sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#605E5C';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.pointStyle = 'circle';
+    Chart.defaults.plugins.legend.labels.padding = 16;
+
+    // ── Revenue Trend ──
+    const revCtx = document.getElementById('revenueTrendChart').getContext('2d');
+    new Chart(revCtx, {
+        type: 'line',
+        data: {
+            labels: [
+                'May 18','Jun 18','Jul 18','Aug 18','Sep 18','Oct 18','Nov 18','Dec 18',
+                'Jan 19','Feb 19','Mar 19','Apr 19','May 19','Jun 19','Jul 19','Aug 19','Sep 19','Oct 19','Nov 19','Dec 19',
+                'Jan 20','Feb 20','Mar 20','Apr 20','May 20','Jun 20','Jul 20','Aug 20','Sep 20','Oct 20','Nov 20','Dec 20'
+            ],
+            datasets: [{
+                label: 'Revenue ($)',
+                data: [
+                    75630, 2454753, 2707550, 2909421, 2798195, 2323721, 2977607, 3046617,
+                    3075112, 2168569, 2199510, 2844987, 2795126, 2596987, 2295286, 2652919, 2610427, 2496795, 3065719, 2733352,
+                    3129999, 2762182, 2314120, 2489539, 2781726, 2349087, 3108043, 2486759, 2380631, 2778718, 2629475, 2654165
+                ],
+                borderColor: COLORS.blue,
+                backgroundColor: gradientBlue(revCtx, 280),
+                fill: true,
+                tension: 0.4,
+                pointRadius: 2,
+                pointHoverRadius: 6,
+                pointBackgroundColor: COLORS.blue,
+                borderWidth: 2.5,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    titleFont: { weight: '600' },
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => `Revenue: $${(ctx.parsed.y / 1e6).toFixed(2)}M`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { maxTicksLimit: 12, font: { size: 10 } }
+                },
+                y: {
+                    grid: { color: '#F3F2F1' },
+                    ticks: {
+                        callback: v => `$${(v / 1e6).toFixed(1)}M`,
+                        font: { size: 10 }
+                    }
+                }
+            }
+        }
+    });
+
+    // ── Revenue by Channel (Doughnut) ──
+    new Chart(document.getElementById('revenueChannelChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['In-Store', 'Online', 'Distributor', 'Wholesale'],
+            datasets: [{
+                data: [34040114, 24629756, 14809908, 9212949],
+                backgroundColor: [COLORS.blue, COLORS.green, COLORS.orange, COLORS.purple],
+                borderWidth: 3,
+                borderColor: '#FFFFFF',
+                hoverOffset: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 16, font: { size: 11 } }
+                },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => {
+                            const pct = ((ctx.parsed / 82692727) * 100).toFixed(1);
+                            return `${ctx.label}: $${(ctx.parsed / 1e6).toFixed(1)}M (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // ── Profit by Channel (Bar) ──
+    new Chart(document.getElementById('profitChannelChart'), {
+        type: 'bar',
+        data: {
+            labels: ['In-Store', 'Online', 'Distributor', 'Wholesale'],
+            datasets: [{
+                label: 'Profit ($)',
+                data: [8753971, 6136091, 3867957, 2460496],
+                backgroundColor: [
+                    'rgba(66,133,244,0.8)',
+                    'rgba(39,174,96,0.8)',
+                    'rgba(242,153,74,0.8)',
+                    'rgba(155,81,224,0.8)'
+                ],
+                borderRadius: 8,
+                borderSkipped: false,
+                barPercentage: 0.6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => `Profit: $${(ctx.parsed.x / 1e6).toFixed(2)}M`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: '#F3F2F1' },
+                    ticks: {
+                        callback: v => `$${(v / 1e6).toFixed(0)}M`,
+                        font: { size: 10 }
+                    }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11, weight: '600' } }
+                }
+            }
+        }
+    });
+
+    // ── Delivery Performance (Doughnut) ──
+    new Chart(document.getElementById('deliveryChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['On Time', 'Late'],
+            datasets: [{
+                data: [5603, 2388],
+                backgroundColor: [COLORS.green, COLORS.red],
+                borderWidth: 3,
+                borderColor: '#FFFFFF',
+                hoverOffset: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 14, font: { size: 11 } }
+                },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => {
+                            const pct = ((ctx.parsed / 7991) * 100).toFixed(1);
+                            return `${ctx.label}: ${ctx.parsed.toLocaleString()} (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [{
+            id: 'centerText',
+            afterDraw(chart) {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                ctx.font = 'bold 28px Segoe UI';
+                ctx.fillStyle = '#1B1F3B';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('70.1%', width / 2, height / 2 - 12);
+                ctx.font = '12px Segoe UI';
+                ctx.fillStyle = '#8A8886';
+                ctx.fillText('On Time', width / 2, height / 2 + 14);
+                ctx.restore();
+            }
+        }]
+    });
+
+    // ── Warehouse Delivery Days (Bar) ──
+    new Chart(document.getElementById('warehouseChart'), {
+        type: 'bar',
+        data: {
+            labels: ['NBV1002', 'MKL1006', 'XYS1001', 'UHY1004', 'PUJ1005', 'NMK1003'],
+            datasets: [{
+                label: 'Avg Delivery Days',
+                data: [3716, 4584, 6825, 6953, 8103, 13801],
+                backgroundColor: [
+                    'rgba(39,174,96,0.8)',
+                    'rgba(39,174,96,0.6)',
+                    'rgba(242,201,76,0.8)',
+                    'rgba(242,153,74,0.8)',
+                    'rgba(235,87,87,0.7)',
+                    'rgba(235,87,87,0.9)',
+                ],
+                borderRadius: 6,
+                borderSkipped: false,
+                barPercentage: 0.65,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 10 } }
+                },
+                y: {
+                    grid: { color: '#F3F2F1' },
+                    ticks: { font: { size: 10 } }
+                }
+            }
+        }
+    });
+
+    // ── Yearly Revenue Comparison ──
+    new Chart(document.getElementById('yearlyChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2018', '2019', '2020'],
+            datasets: [{
+                label: 'Revenue ($)',
+                data: [19293494, 31534790, 31864443],
+                backgroundColor: [
+                    'rgba(66,133,244,0.8)',
+                    'rgba(39,174,96,0.8)',
+                    'rgba(155,81,224,0.8)',
+                ],
+                borderRadius: 10,
+                borderSkipped: false,
+                barPercentage: 0.5,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => `Revenue: $${(ctx.parsed.y / 1e6).toFixed(2)}M`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 12, weight: '600' } }
+                },
+                y: {
+                    grid: { color: '#F3F2F1' },
+                    ticks: {
+                        callback: v => `$${(v / 1e6).toFixed(0)}M`,
+                        font: { size: 10 }
+                    }
+                }
+            }
+        }
+    });
+
+    // ── Revenue vs Profit (Grouped Bar) ──
+    new Chart(document.getElementById('revVsProfitChart'), {
+        type: 'bar',
+        data: {
+            labels: ['In-Store', 'Online', 'Distributor', 'Wholesale'],
+            datasets: [
+                {
+                    label: 'Revenue',
+                    data: [34040114, 24629756, 14809908, 9212949],
+                    backgroundColor: 'rgba(66,133,244,0.8)',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                },
+                {
+                    label: 'Profit',
+                    data: [8753971, 6136091, 3867957, 2460496],
+                    backgroundColor: 'rgba(39,174,96,0.8)',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: { padding: 20, font: { size: 12 } }
+                },
+                tooltip: {
+                    backgroundColor: '#1B1F3B',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => `${ctx.dataset.label}: $${(ctx.parsed.y / 1e6).toFixed(2)}M`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 12, weight: '600' } }
+                },
+                y: {
+                    grid: { color: '#F3F2F1' },
+                    ticks: {
+                        callback: v => `$${(v / 1e6).toFixed(0)}M`,
+                        font: { size: 10 }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+</body></html>
